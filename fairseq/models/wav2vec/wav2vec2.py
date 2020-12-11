@@ -672,13 +672,15 @@ class ConvFeatureExtractionModel(nn.Module):
             in_d = dim
 
     def forward(self, x):
-
         # BxT -> BxCxT
         x = x.unsqueeze(1)
-
-        for conv in self.conv_layers:
+        #manual pass to skip the group norm
+        for layer in self.conv_layers[0]:
+            if("GroupNorm" not in str(layer)):
+                print("ignoring GroupNorm")
+                x = layer(x)
+        for conv in self.conv_layers[1:]:
             x = conv(x)
-
         return x
 
 
