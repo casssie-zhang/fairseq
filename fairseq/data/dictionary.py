@@ -222,6 +222,9 @@ class Dictionary(object):
         """
         if isinstance(f, str):
             try:
+                print("RAV MSG CATCH", f)
+                if(f == '/home/ubuntu/project/manifest/train/dict.ltr.txt'):
+                    f = '/home/ras306/Classwork/Project/Wav2Vec/model/dict.ltr.txt'
                 with open(PathManager.get_local_path(f), "r", encoding="utf-8") as fd:
                     self.add_from_file(fd)
             except FileNotFoundError as fnfe:

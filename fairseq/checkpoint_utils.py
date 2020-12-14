@@ -224,6 +224,9 @@ def load_checkpoint(cfg: CheckpointConfig, trainer, **passthrough_args):
 
 def load_checkpoint_to_cpu(path, arg_overrides=None):
     """Loads a checkpoint to CPU (with upgrading for backward compatibility)."""
+    print("RAV MSG CATCH: ", path)
+    if(path == '/home/ubuntu/project/model/wav2vec_small.pt' ):
+        path = '/home/ras306/Classwork/Project/Wav2Vec/model/wav2vec_small.pt'
     with open(PathManager.get_local_path(path), "rb") as f:
         state = torch.load(f, map_location=torch.device("cpu"))
 
@@ -480,6 +483,7 @@ def _upgrade_state_dict(state):
         if hasattr(state["args"], "min_lr"):
             state["args"].stop_min_lr = state["args"].min_lr
             del state["args"].min_lr
+
         # binary_cross_entropy => wav2vec criterion
         if hasattr(state["args"], "criterion") and state["args"].criterion == "binary_cross_entropy":
             state["args"].criterion = "wav2vec"
@@ -489,7 +493,6 @@ def _upgrade_state_dict(state):
         # audio_cpc => wav2vec
         if hasattr(state["args"], "arch") and state["args"].arch == "audio_cpc":
             state["args"].arch = "wav2vec"
-
         state["cfg"] = convert_namespace_to_omegaconf(state["args"])
 
     if "cfg" in state and state["cfg"] is not None:
